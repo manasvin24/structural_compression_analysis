@@ -1,0 +1,61 @@
+base_model: "Qwen/Qwen2-7B"
+
+calibration:
+  dataset: "wikitext"
+  dataset_name: "wikitext-2-raw-v1"
+  split: "train"
+  num_samples: 512
+  max_length: 2048
+  seed: 42
+
+quant_configs:
+  - method: gptq
+    bits: 4
+    group_size: 128
+    desc_act: false
+  - method: awq
+    bits: 4
+    group_size: 128
+    zero_point: true
+    version: "GEMM"
+  - method: rtn
+    bits: 8
+    per_channel: true
+
+ablation_variants:
+  - full_quant
+  - attn_only_quant
+  - mlp_only_quant
+
+eval:
+  perplexity:
+    dataset: "wikitext"
+    dataset_name: "wikitext-2-raw-v1"
+    split: "test"
+    max_length: 2048
+    stride: 512
+  humaneval:
+    num_samples_per_task: 1
+    temperature: 0.0
+  gsm8k:
+    num_fewshot: 8
+  mmlu:
+    num_fewshot: 5
+
+accuracy_weights:
+  humaneval: 0.4
+  gsm8k: 0.3
+  mmlu: 0.3
+
+deployment_benchmark:
+  prompt_length: 128
+  generation_length: 128
+  batch_size: 1
+  warmup_iters: 3
+  bench_iters: 10
+
+paths:
+  artifacts_dir: "artifacts"
+  results_dir: "results"
+  calibration_dir: "calibration_data"
+  plots_dir: "results/plots"

@@ -1,0 +1,15 @@
+torch>=2.0
+transformers>=4.36
+accelerate
+auto-gptq
+autoawq
+bitsandbytes
+vllm
+datasets
+evaluate
+pandas
+pyarrow
+matplotlib
+seaborn
+pyyaml
+safetensors
